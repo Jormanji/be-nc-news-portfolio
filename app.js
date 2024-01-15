@@ -1,14 +1,13 @@
 const express = require("express")
 const app = express()
-const {getTopics} = require("./controllers/get.controllers")
-const e = require("express")
+const {getTopics, getApiEndpoints} = require("./controllers/get.controllers")
 
 app.use(express.json())
 
 
 app.get("/api/topics", getTopics)
 
-
+app.get("/api", getApiEndpoints)
 
 app.use((err, req, res, next) => {
     if (err.code === "22P02"){
@@ -29,7 +28,3 @@ app.use((err, req, res, next) => {
 })
 
 module.exports = app
-
-// THINGS THAT COULD GO WRONG WITH AN API/TOPICS GET:
-// - Mispelling of topics e.g. topacs.
-// - 
