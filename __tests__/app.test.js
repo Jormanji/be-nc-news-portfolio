@@ -3,6 +3,10 @@ const app = require("../app")
 const db = require("../db/connection")
 const seed = require("../db/seeds/seed")
 const {topicData, userData, articleData, commentData} = require("../db/data/test-data/index");
+const endpointsData = require("../endpoints.json");
+
+
+
 
 beforeEach(() => seed({topicData, userData, articleData, commentData}))
 afterAll(() => db.end())
@@ -30,6 +34,16 @@ describe("api", () => {
                 .then((response) => {
                     expect(response.body.message).toBe("Not found")
                 })
+            })
+        })
+    })
+    describe("GET", () => {
+        test("200: sends an object describing all the available endpoints on the API", () => {
+            return request(app)
+            .get('/api')
+            .expect(200)
+            .then((response) => {
+                expect(response.body).toEqual(endpointsData)
             })
         })
     })
