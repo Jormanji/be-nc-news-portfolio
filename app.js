@@ -12,6 +12,11 @@ app.get("/api", getApiEndpoints)
 app.get("/api/articles/:article_id", getArticleById)
 
 
+
+app.use(( req, res) => {
+  res.status(404).send({ message: "Not found"})
+})
+
 app.use((err, req, res, next) => {
     if (err.code === "22P02"){
       res.status(400).send({message : "Bad request"});
@@ -26,8 +31,6 @@ app.use((err, req, res, next) => {
         next(err)
     }
   })
-  app.use(( req, res) => {
-    res.status(404).send({ message: "Not found"})
-})
+
 
 module.exports = app
