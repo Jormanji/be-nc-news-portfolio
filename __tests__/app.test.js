@@ -68,6 +68,22 @@ describe("/api", () => {
                     expect(response.body).toEqual(expectedOutput)
                 })
             })
+            test("400: send a 400 bad request when given an invalid data type in the id", () => {
+                return request(app)
+                .get("/api/articles/banana")
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.message).toBe("Bad request")
+                })
+            })
+            test("404: send a 404 'not found' when given an id which doesn't currently exist", () => {
+                return request(app)
+                .get("/api/articles/100")
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.message).toBe("Not found")
+                })
+            })
         })
     })
 })

@@ -17,6 +17,9 @@ exports.fetchApiEndpoints = () => {
 exports.fetchArticleById = (articleId) => {
     return db.query('SELECT * FROM articles WHERE article_id = $1', [articleId])
     .then((result) => {
-        return result.rows[0]
+        if(result.rows.length === 0){
+           return Promise.reject("Not found")
+        } else {
+        return result.rows[0]}
     })
 }

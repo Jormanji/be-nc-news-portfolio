@@ -16,5 +16,10 @@ exports.getArticleById = (req, res, next) => {
     const articleId = req.params.article_id
     fetchArticleById(articleId).then((article) => {
         res.status(200).send(article)
+    }).catch((err) => {
+        if(err === "Not found"){
+            res.status(404).send({message: "Not found"})
+        } else {
+        next(err)}
     })
 }
