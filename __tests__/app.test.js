@@ -110,11 +110,12 @@ describe("/api", () => {
         describe("/:article_id", () => {
             describe("/comments", () => {
                 describe("GET", () => {
-                    test("200: responds with an array of comments for the given article_id", () => {
+                    test.only("200: responds with an array of comments for the given article_id", () => {
                         return request(app)
-                        .get("/api/articles/1/comments")
+                        .get("/api/articles/3/comments")
                         .expect(200)
                         .then(({ body: {comments}}) => {
+                            console.log(comments)
                             expect(comments).toBeSortedBy("created_at", {descending: true})
                             comments.forEach((comment) => {
                                 expect(typeof comment.comment_id).toBe("number")
