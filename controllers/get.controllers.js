@@ -1,8 +1,11 @@
-const {fetchTopics, fetchApiEndpoints, fetchArticleById} = require("../models/get.models")
+const articles = require("../db/data/test-data/articles");
+const {fetchTopics, fetchApiEndpoints, fetchArticleById, fetchArticles} = require("../models/get.models")
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {
         res.status(200).send({ topics });
+    }).catch((err) => {
+        next(err)
     })
 }
 
@@ -17,9 +20,14 @@ exports.getArticleById = (req, res, next) => {
     fetchArticleById(articleId).then((article) => {
         res.status(200).send(article)
     }).catch((err) => {
-        if(err === "Not found"){
-            res.status(404).send({message: "Not found"})
-        } else {
-        next(err)}
+        next(err)
+    })
+}
+
+exports.getArticles = (req, res, next) => {
+    fetchArticles().then((articles) => {
+        res.status(200).send({articles})
+    }).catch((err) => {
+        next(err)
     })
 }
