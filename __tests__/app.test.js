@@ -107,5 +107,51 @@ describe("/api", () => {
                 })
             })
         })
+        describe("/:article_id", () => {
+            describe("/comments", () => {
+                describe("GET", () => {
+                    test("200: responds with an array of comments for the given article_id", () => {
+                        return request(app)
+                        .get("/api/articles/1/comments")
+                        .expect(200)
+                        .then(({ body: {comments}}) => {
+                            expect(comments).toBeSortedBy("created_at", {descending: true})
+                            comments.forEach((comment) => {
+                                expect(typeof comment.comment_id).toBe("number")
+                                expect(typeof comment.votes).toBe("number")
+                                expect(typeof comment.created_at).toBe("string")
+                                expect(typeof comment.author).toBe("string")
+                                expect(typeof comment.body).toBe("string")
+                                expect(typeof comment.article_id).toBe("number")
+                            })
+                        })
+                    })
+                    test("400: responds with a bad request if given invalid id type", () => {
+                        return request(app)
+                        .get("/api/articles/banana/comments")
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Bad request")
+                        })
+                    })
+                    test("404: responds with a 'Not found' when given valid id type but article doesn't exist", () => {
+                        return request(app)
+                        .get("/api/articles/1000/comments")
+                        .expect(404)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Not found")
+                        })
+                    })
+                    test("200: responds with an empty array when given a valid article but it contains no comments", () => {
+                        return request(app)
+                        .get("/api/articles/2/comments")
+                        .expect(200)
+                        .then(({ body: {comments}}) => {
+                            expect(comments.length).toBe(0)
+                        })
+                    })
+                })
+            })
+        })
     })
 })
