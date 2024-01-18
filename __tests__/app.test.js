@@ -110,12 +110,11 @@ describe("/api", () => {
         describe("/:article_id", () => {
             describe("/comments", () => {
                 describe("GET", () => {
-                    test.only("200: responds with an array of comments for the given article_id", () => {
+                    test("200: responds with an array of comments for the given article_id", () => {
                         return request(app)
                         .get("/api/articles/3/comments")
                         .expect(200)
                         .then(({ body: {comments}}) => {
-                            console.log(comments)
                             expect(comments).toBeSortedBy("created_at", {descending: true})
                             comments.forEach((comment) => {
                                 expect(typeof comment.comment_id).toBe("number")
@@ -124,6 +123,7 @@ describe("/api", () => {
                                 expect(typeof comment.author).toBe("string")
                                 expect(typeof comment.body).toBe("string")
                                 expect(typeof comment.article_id).toBe("number")
+                                expect(comment.article_id).toBe(3)
                             })
                         })
                     })
@@ -149,6 +149,76 @@ describe("/api", () => {
                         .expect(200)
                         .then(({ body: {comments}}) => {
                             expect(comments.length).toBe(0)
+                        })
+                    })
+                })
+                describe("POST", () => {
+                    test("POST /comments should return with a newly added comment", () => {
+                        return request(app)
+                        .post("/api/articles/3/comments")
+                        .send({
+                            author: "Jormanji",
+                            body: "Wow, my comment is really here!"})
+                        .expect(201)
+                        .then((response) => {
+                            expect(response.body).toHaveProperty("author", "Jormanji"),
+                            expect(response.body).toHaveProperty("body", "Wow, my comment is really here!")
+
+                            return request(app)
+                            .get("/api/articles/3/comments")
+                            .expect(200)
+                            .then(({ body: {comments}}) => {
+                                const postedComment = response.body;
+
+                                expect(postedComment).toHaveProperty("author", "Jormanji"),
+                                expect(response.body).toHaveProperty("body", "Wow, my comment is really here!")
+                            })
+                        })
+                    })
+                    test("404: sends back a 404 when the username doesn't exist", () => {
+                        return request(app)
+                        .post("/api/articles/3/comments")
+                        .send({
+                            author: "Jormanj",
+                            body: "Wow, my comment is really here!"})
+                        .expect(404)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Not found")
+                        })
+                    })
+                    test("404: sends back a 404 when the article doesn't exist", () => {
+                        return request(app)
+                        .post("/api/articles/1000/comments")
+                        .send({
+                            author: "Jormanji",
+                            body: "Wow, my comment is really here!"})
+                        .expect(404)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Not found")
+                        })
+                    })
+                    test("400: sends back a 400 when no body exists", () => {
+                        return request(app)
+                        .post("/api/articles/1/comments")
+                        .send({
+                            author: "Jormanji",
+                            body: ""
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Bad request")
+                        })
+                    })
+                    test("400: sends back a 400 when the article id is invalid", () => {
+                        return request(app)
+                        .post("/api/articles/banana/comments")
+                        .send({
+                            author: "Jormanji",
+                            body: "Hello!"
+                        })
+                        .expect(400)
+                        .then((response) => {
+                            expect(response.body.message).toBe("Bad request")
                         })
                     })
                 })
