@@ -222,6 +222,54 @@ describe("/api", () => {
                     })
                 })
             })
+            describe("Patch", () => {
+                test("Patch /api/articles/:article_id should increase/decrease the vote by a specfied amount on a specified article", () => {
+                    return request(app)
+                    .patch("/api/articles/1")
+                    .send({inc_votes: 10})
+                    .expect(200)
+                    .then((response) => {
+                        expect(response.body.article.votes).toBe(110)
+                        expect(response.body.article.article_id).toBe(1)
+                    })
+                })
+                test("404: sends a 'Not found' when the article id does not exist yet", () => {
+                    return request(app)
+                    .patch("/api/articles/500")
+                    .send({inc_votes: 10})
+                    .expect(404)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Not found")
+                    })
+                })
+                test("400: sends a bad request when the article id is invalid", () => {
+                    return request(app)
+                    .patch("/api/articles/banana")
+                    .send({inc_votes: 10})
+                    .expect(400)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Bad request")
+                    })
+                })
+                test("400: sends a bad request when inc_votes is given an invalid data type", () => {
+                    return request(app)
+                    .patch("/api/articles/1")
+                    .send({inc_votes: "banana"})
+                    .expect(400)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Bad request")
+                    })
+                })
+                test("404: sends a 'Not found' when inc_votes is trying to add votes to an article that doesn't exist yet", () => {
+                    return request(app)
+                    .patch("/api/articles/10000")
+                    .send({inc_votes: 10})
+                    .expect(404)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Not found")
+                    })
+                })
+            })
         })
     })
 })
