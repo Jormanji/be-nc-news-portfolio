@@ -1,6 +1,5 @@
 const db = require("../db/connection")
 const fs = require("fs/promises")
-const { fetchCommentCount } = require("../db/seeds/utils")
 
 exports.fetchTopics = () => {
     return db.query("SELECT * FROM topics").then((result) => {
@@ -69,4 +68,5 @@ exports.fetchArticleComments = (articleId) => {
     })
 })
 }
+
 
