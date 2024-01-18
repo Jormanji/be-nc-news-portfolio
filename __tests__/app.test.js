@@ -157,7 +157,7 @@ describe("/api", () => {
                         return request(app)
                         .post("/api/articles/3/comments")
                         .send({
-                            author: "Jormanji",
+                            username: "Jormanji",
                             body: "Wow, my comment is really here!"})
                         .expect(201)
                         .then((response) => {
@@ -179,7 +179,7 @@ describe("/api", () => {
                         return request(app)
                         .post("/api/articles/3/comments")
                         .send({
-                            author: "Jormanj",
+                            username: "Jormanj",
                             body: "Wow, my comment is really here!"})
                         .expect(404)
                         .then((response) => {
@@ -190,7 +190,7 @@ describe("/api", () => {
                         return request(app)
                         .post("/api/articles/1000/comments")
                         .send({
-                            author: "Jormanji",
+                            username: "Jormanji",
                             body: "Wow, my comment is really here!"})
                         .expect(404)
                         .then((response) => {
@@ -201,8 +201,7 @@ describe("/api", () => {
                         return request(app)
                         .post("/api/articles/1/comments")
                         .send({
-                            author: "Jormanji",
-                            body: ""
+                            username: "Jormanji",
                         })
                         .expect(400)
                         .then((response) => {
@@ -213,7 +212,7 @@ describe("/api", () => {
                         return request(app)
                         .post("/api/articles/banana/comments")
                         .send({
-                            author: "Jormanji",
+                            username: "Jormanji",
                             body: "Hello!"
                         })
                         .expect(400)
