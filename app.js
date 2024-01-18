@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const {getTopics, getApiEndpoints, getArticleById, getArticles, getArticleComments} = require("./controllers/get.controllers")
 const {postArticleComment} = require("./controllers/post.controllers")
+const {updateVoteCount} = require("./controllers/patch.controllers")
 
 app.use(express.json())
 
@@ -18,21 +19,23 @@ app.get("/api/articles/:article_id/comments", getArticleComments)
 
 app.post("/api/articles/:article_id/comments", postArticleComment)
 
+app.patch("/api/articles/:article_id", updateVoteCount)
+
 app.all("*", (req, res) => {
   res.status(404).send({message : "Not found"})
 })
 
 
 app.use((err, req, res, next) => {
-  if (err.status && err.message) {
-    res.status(err.status).send({ message: err.message });
+  if (err.code === "22P02") {
+    res.status(400).send({ message: "Bad request" });
   } else {
     next(err);
   }
 });
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") {
-    res.status(400).send({ message: "Bad request" });
+  if (err.status && err.message) {
+    res.status(err.status).send({ message: err.message });
   } else {
     next(err);
   }
