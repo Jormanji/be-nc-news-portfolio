@@ -62,5 +62,17 @@
         "created_at": "'2020-06-20T07:24:00.000Z'"
       }
     ]
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "posts a comment to a specified article",
+    "queries": [],
+    "exampleResponse": {
+      "comment_id": 20,
+      "body": "'Wow, my comment is really here!'",
+      "article_id": 3,
+      "author": "'Jormanji'",
+      "votes": 0,
+      "created_at": "'2024-01-18T10:52:23.638Z'"
+    }
   }
 }
