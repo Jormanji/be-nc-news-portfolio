@@ -1,5 +1,6 @@
 const articles = require("../db/data/test-data/articles");
 const {fetchTopics, fetchApiEndpoints, fetchArticleById, fetchArticles, fetchArticleComments, fetchUsers} = require("../models/get.models")
+const {fetchCommentCount} = require("../db/seeds/utils")
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {
@@ -18,7 +19,14 @@ exports.getApiEndpoints = (req, res, next) => {
 exports.getArticleById = (req, res, next) => {
     const articleId = req.params.article_id
     fetchArticleById(articleId).then((article) => {
-        res.status(200).send(article)
+        return fetchCommentCount(articleId)
+        .then((commentCount) => {
+            const numberCommentCount = Number(commentCount)
+            const articleWithCommentCount = {
+                ...article, comment_count: numberCommentCount
+            }
+            res.status(200).send(articleWithCommentCount)
+        })
     }).catch((err) => {
         next(err)
     })

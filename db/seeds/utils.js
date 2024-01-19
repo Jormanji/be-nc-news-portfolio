@@ -38,10 +38,22 @@ exports.getCommentById = (comment_id) => {
 }
 
 exports.doesTopicExist = (targetTopic) => {
-  for (const topic of topics) {
-    if (topic.slug === targetTopic){
-      return true
-    } 
-  }
-  return false
+  return db.query(`
+    SELECT *
+    FROM topics
+    WHERE slug = $1`, [targetTopic])
+    .then((result) => {
+      return result.rows.length > 0;
+    });
+};
+
+exports.fetchCommentCount = (article_id) => {
+  return db.query(`
+  SELECT COUNT (*)
+  FROM comments
+  WHERE article_id = $1
+  `, [article_id])
+  .then((result) => {
+    return result.rows[0].count
+  })
 }

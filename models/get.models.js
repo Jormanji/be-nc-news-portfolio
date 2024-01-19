@@ -26,9 +26,11 @@ exports.fetchArticleById = (articleId) => {
 }
 
 exports.fetchArticles = (topic) => {
-    if (topic && !doesTopicExist(topic)) {
-        return Promise.reject({ status: 400, message: "Not found"})
-    }
+    return doesTopicExist(topic)
+    .then(topicExists => {
+        if (topic && !topicExists) {
+            return Promise.reject({ status: 404, message: "Not found" });
+        }
 
     let query = `
     SELECT 
@@ -57,6 +59,7 @@ exports.fetchArticles = (topic) => {
     
     return db.query(query, queryParameters).then((result) => {
         return result.rows
+        })
     })
 }
 
