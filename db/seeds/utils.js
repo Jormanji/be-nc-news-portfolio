@@ -1,4 +1,5 @@
 const db = require("../connection")
+const topics = require("../data/test-data/topics")
 
 exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
   if (!created_at) return { ...otherProperties };
@@ -34,4 +35,13 @@ exports.getCommentById = (comment_id) => {
     } else {
     return result.rows[0]}
   })
+}
+
+exports.doesTopicExist = (targetTopic) => {
+  for (const topic of topics) {
+    if (topic.slug === targetTopic){
+      return true
+    } 
+  }
+  return false
 }
