@@ -1,4 +1,4 @@
-const {patchVoteCount, updateArticleVotes} = require("../models/patch.models")
+const {updateArticleVotes} = require("../models/patch.models")
 const {fetchArticleById} = require("../models/get.models")
 
 exports.updateVoteCount = (req, res, next) => {
