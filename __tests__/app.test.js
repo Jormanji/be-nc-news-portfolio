@@ -4,6 +4,7 @@ const db = require("../db/connection")
 const seed = require("../db/seeds/seed")
 const {topicData, userData, articleData, commentData} = require("../db/data/test-data/index");
 const endpointsData = require("../endpoints.json");
+const users = require("../db/data/test-data/users");
 
 
 
@@ -303,6 +304,24 @@ describe("/api", () => {
                     .expect(400)
                     .then((response) => {
                         expect(response.body.message).toBe("Bad request")
+                    })
+                })
+            })
+        })
+    })
+    describe("users", () => {
+        describe("GET", () => {
+            test("should retrieve an array of objects containing all the current users and their details", () => {
+                return request(app)
+                .get("/api/users")
+                .expect(200)
+                .then(({body: {users}}) => {
+                    expect(Array.isArray(users)).toBe(true)
+                    expect(users.length).toBe(5);
+                    users.forEach((user) => {
+                        expect(typeof user.username).toBe("string")
+                        expect(typeof user.name).toBe("string")
+                        expect(typeof user.avatar_url).toBe("string")
                     })
                 })
             })

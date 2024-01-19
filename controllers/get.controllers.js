@@ -1,5 +1,5 @@
 const articles = require("../db/data/test-data/articles");
-const {fetchTopics, fetchApiEndpoints, fetchArticleById, fetchArticles, fetchArticleComments} = require("../models/get.models")
+const {fetchTopics, fetchApiEndpoints, fetchArticleById, fetchArticles, fetchArticleComments, fetchUsers} = require("../models/get.models")
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topics) => {
@@ -36,6 +36,14 @@ exports.getArticleComments = (req, res, next) => {
     const articleId = req.params.article_id
     fetchArticleComments(articleId).then((comments) => {
         res.status(200).send({comments})
+    }).catch((err) => {
+        next(err)
+    })
+}
+
+exports.getUsers = (req, res, next) => {
+    fetchUsers().then((users) => {
+        res.status(200).send({users})
     }).catch((err) => {
         next(err)
     })
