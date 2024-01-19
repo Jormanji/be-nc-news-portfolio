@@ -223,13 +223,23 @@ describe("/api", () => {
                 })
             })
             describe("Patch", () => {
-                test("Patch /api/articles/:article_id should increase/decrease the vote by a specfied amount on a specified article", () => {
+                test("Patch /api/articles/:article_id should increase the vote by a specfied amount on a specified article", () => {
                     return request(app)
                     .patch("/api/articles/1")
                     .send({inc_votes: 10})
                     .expect(200)
                     .then((response) => {
                         expect(response.body.article.votes).toBe(110)
+                        expect(response.body.article.article_id).toBe(1)
+                    })
+                })
+                test("Patch /api/articles/:article_id should decrease the vote by a specfied amount on a specified article", () => {
+                    return request(app)
+                    .patch("/api/articles/1")
+                    .send({inc_votes: -10})
+                    .expect(200)
+                    .then((response) => {
+                        expect(response.body.article.votes).toBe(90)
                         expect(response.body.article.article_id).toBe(1)
                     })
                 })
@@ -267,6 +277,32 @@ describe("/api", () => {
                     .expect(404)
                     .then((response) => {
                         expect(response.body.message).toBe("Not found")
+                    })
+                })
+            })
+            describe("DELETE", () => {
+                test("should delete the specified comment", () => {
+                    return request(app)
+                    .delete("/api/comments/1")
+                    .expect(204)
+                    .then((response) => {
+                        expect(response.body).toEqual({})
+                    })
+                })
+                test("404: should return 'Not found' when trying to delete a comment that doesn't exist", () => {
+                    return request(app)
+                    .delete("/api/comments/10000")
+                    .expect(404)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Not found")
+                    })
+                })
+                test("400: should return a 'Bad request' when trying to delete a comment using an invalid datatype for comment_id", () => {
+                    return request(app)
+                    .delete("/api/comments/banana")
+                    .expect(400)
+                    .then((response) => {
+                        expect(response.body.message).toBe("Bad request")
                     })
                 })
             })
