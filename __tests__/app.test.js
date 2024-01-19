@@ -85,6 +85,32 @@ describe("/api", () => {
                 })
             })
         })
+        describe("Query", () => {
+            test("Can filter by a given topic", () => {
+                return request(app)
+                .get("/api/articles?topic=mitch")
+                .then(({body}) => {
+                    expect(body.articles.length).toBe(12)
+                    body.articles.forEach((article) => {
+                        expect(article.topic).toBe("mitch")
+                    })
+                })
+            })
+            test("404: returns a 404 if the topic doesn't exist in the database", () => {
+                return request(app)
+                .get("/api/articles?topic=bananas")
+                .then((response) => {
+                    expect(response.body.message).toBe("Not found")
+                })
+            })
+            test("200: returns an empty array when queried with an existing topic with no associated articles", () => {
+                return request(app)
+                .get("/api/articles?topic=paper")
+                .then(({body}) => {
+                    expect(body.articles).toEqual([])
+                })
+            })
+        })
         describe("GET", () => {
             test("200: sends an array of article objects in descending order by date", () => {
                 return request(app)
