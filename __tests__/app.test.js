@@ -142,7 +142,7 @@ describe("/api", () => {
                             comments.forEach((comment) => {
                                 expect(typeof comment.comment_id).toBe("number")
                                 expect(typeof comment.votes).toBe("number")
-                                expect(typeof comment.created_at).toBe("string")
+                                expect(typeof comment.comment_created_at).toBe("string")
                                 expect(typeof comment.author).toBe("string")
                                 expect(typeof comment.body).toBe("string")
                                 expect(typeof comment.article_id).toBe("number")
