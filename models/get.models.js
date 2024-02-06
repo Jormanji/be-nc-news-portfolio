@@ -74,7 +74,7 @@ exports.fetchArticleComments = (articleId) => {
         }
 
     return db.query(
-        `SELECT *
+        `SELECT *, to_char(created_at, 'Dy Mon DD YYYY HH24:MI:SS') AS formatted_created_at
         FROM comments
         WHERE article_id = $1
         ORDER BY created_at DESC`,
