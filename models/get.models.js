@@ -16,7 +16,7 @@ exports.fetchApiEndpoints = () => {
 }
 
 exports.fetchArticleById = (articleId) => {
-    return db.query('SELECT * FROM articles WHERE article_id = $1', [articleId])
+    return db.query('SELECT *, to_char(created_at, \'Dy Mon DD YYYY HH24:MI:SS\') AS created_at FROM articles WHERE article_id = $1', [articleId])
     .then((result) => {
         if(result.rows.length === 0){
            return Promise.reject({status: 404, message: "Not found"})
@@ -38,7 +38,7 @@ exports.fetchArticles = (topic) => {
     articles.title,
     articles.article_id, 
     articles.topic, 
-    articles.created_at, 
+    to_char(articles.created_at, 'Dy Mon DD YYYY HH24:MI:SS') AS created_at, 
     articles.votes, 
     articles.article_img_url, 
     COUNT(comments.comment_id)::INT AS comment_count
