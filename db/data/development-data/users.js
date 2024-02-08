@@ -34,5 +34,10 @@ module.exports = [
     name: 'Jess Jelly',
     avatar_url:
       'https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141'
+  },
+  {
+    username: 'Jormanji',
+    name: 'Jordan',
+    avatar_url: 'https://lh3.googleusercontent.com/proxy/MOuYv_9zrDkpXbUxMkk-5XMcEXz9R9CYn0SzLv6P6ltepa58gwEv6gxiIGqMzqI3SX0PW4aHfgREtTyM-CcQmUEi3ofJqB3hUPEMOHPNl34alqEBFvXXwA'
   }
 ];
